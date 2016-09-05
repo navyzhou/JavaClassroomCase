@@ -1,0 +1,13 @@
+<Resource
+	name="jdbc"
+	auth="Container"
+	type="javax.sql.DataSource"
+	driverClassName="oracle.jdbc.driver.OracleDriver"
+	username="scott"
+	password="a"
+	url="jdbc:oracle:thin:@127.0.0.1:1521:orcl"
+	autoReconnect="true"
+	maxActive="120"
+	maxIdle="30"
+	maxWait="8000"
+/>

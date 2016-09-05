@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>窝窝团后台管理</title>
+	<link rel="stylesheet" type="text/css" href="../../easyui/css/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../easyui/css/icon.css">
+	<link rel="stylesheet" type="text/css" href="../../easyui/css/demo.css">
+	<style>
+		.copyright{
+			text-align:center;
+			font-size:16px;
+			font-weight:bold;
+			color:#D44C0A !important;
+			height:40px;
+			line-height:40px;
+			padding:0px;
+			margin:0px;
+		}
+		
+		.copyright span{
+			background: url("../../images/yclogo.png") no-repeat left center;
+			padding-left:30px;
+			font-size:16px;
+			font-weight:bold;
+		}
+		
+		.navy_header{
+			float:right;
+			margin-right:20px;
+		}
+		
+		.navy_header div,.navy_header img{
+			float:left;
+			margin-left:10px;
+		}
+		
+		.navy_header img{
+			border-radius:100px/50px;
+		}
+		
+		.navy_header div p,.navy_header div p span{
+			font-size:15px;
+			font-weight:bold;
+			text-align: center;
+			color:#D44C0A !important;
+		}
+	</style>
+	<script type="text/javascript" src="../../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript" src="../../easyui/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../easyui/js/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../../easyui/js/index.js"></script>
+	<script type="text/javascript" src="../../js/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="../../js/md4.js"></script>
+	
+	<script type="text/javascript" charset="utf-8" src="../../ueditor/ueditor.config.js"></script>
+	<script type="text/javascript" charset="utf-8" src="../../ueditor/ueditor.all.min.js"> </script>
+	<script type="text/javascript" charset="utf-8" src="../../ueditor/lang/zh-cn/zh-cn.js"></script>
+</head>
+<body class="easyui-layout">
+	<div data-options="region:'north',border:false" style="height:100px;background:#B3DFDA;padding:5px;margin:0px;overflow:hidden;">
+		<img src="../../images/logo.gif" height="90px">
+		<div class="navy_header">
+			<img id="index_loginphoto" src="../../images/zanwu.jpg" width="90px"  height="90px"/>
+			<div>
+				<p>当前用户：<span id="index_loginuser">源辰信息</span></p>
+				<p>
+					<a href="javascript:void(0)" id="mb" class="easyui-menubutton" data-options="menu:'#mm',iconCls:'icon-help'">个人中心</a>
+					<a href="javascript:void(0)" class="easyui-menubutton" data-options="iconCls:'icon-back'">注销</a>
+				</p>
+				<div id="mm" style="width:150px;">  
+					    <div data-options="iconCls:'icon-edit'">修改密码</div>  
+					    <div>联系我们</div>  
+					    <div class="menu-sep"></div> 
+					    <div data-options="iconCls:'icon-cancel'">退出</div>   
+					</div>  
+			</div>
+		</div>
+	</div>
+	
+	<div data-options="region:'west',split:true,title:'菜单'" style="width:200px;padding:10px;">
+		<ul class="easyui-tree" id="index_menu_tree">
+			<li>
+				<span>主菜单</span>
+				<ul>
+					<li id="index_role">角色管理</li>
+					<li id="index_admin">管理员信息</li>
+					<li id="index_user">会员信息</li>
+					<li id="index_types">商品类型信息</li>
+					<li>
+						<span>店铺信息</span>
+						<ul>
+							<li id="index_shopping1">
+								<span>审核店铺信息</span>
+							</li>
+							<li id="index_shopping2">
+								<span>查看店铺信息</span>
+							</li>
+							<li id="index_shopping3">
+								<span>管理店铺信息</span>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<span>商品信息</span>
+						<ul>
+							<li id="index_goods1">添加商品信息</li>
+							<li id="index_goods2">查看商品信息</li>
+							<li id="index_goods3">修改商品信息</li>
+						</ul>
+					</li>
+					<li id="index_message">消息管理</li>
+					<li id="index_order">订单管理</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	
+	<div data-options="region:'east',split:true,collapsed:true,title:'帮助'" style="width:200px;padding:10px;">
+
+	</div>
+	
+	<div data-options="region:'south',border:false" style="overflow:hidden;height:40px;background:#A9FACD;padding:0px;margin:0px;">
+		<p class="copyright">源辰信息科技有限公司 &copy; <span>版权所有</span></p>
+	</div>
+	
+	<div data-options="region:'center',title:'内容',tools:[{
+			iconCls:'icon-full',
+			handler:function(){full();}
+		},{
+			iconCls:'icon-unfull',
+			handler:function(){unFull();}
+		}]">
+		<div id="index_content_info" class="easyui-tabs" data-options="fit:true">  
+		
+		</div>  
+	</div>
+</body>
+</html>

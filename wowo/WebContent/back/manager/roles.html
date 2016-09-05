@@ -1,0 +1,148 @@
+<table id="roles_dataInfo"></table> 
+<script>
+	var datagrid;
+	var editRow=undefined; //当前编辑的行
+	var statusObj=[{sid:1,statusStr:'正常'},{sid:0,statusStr:'已禁用'}];
+	var op;
+	var flag;
+	
+	datagrid=$('#roles_dataInfo').datagrid({   
+	    url:'../../rolesServlet',
+	    queryParams: {op:"findRolesByPage"},
+	    loadMsg:"数据加载中...",
+	    fitColumns:true,
+	    striped:true,
+	    nowrap:true,
+	    pagination:true,
+	    fit:true,
+	    rownumbers:true,
+	    pageList:[5,10,20,30,40,50,100],
+	    pageSize:5,
+	    sortName:"rid",
+	    remoteSort:false,
+	    columns:[[
+			{field:'rids',title:'选择',width:100,align:'center',checkbox:true}, 
+	        {field:'rid',title:'角色编号',width:100,align:'center',sortable:true},   
+	        {field:'rname',title:'角色名',width:100,align:'center',editor:{type:"text",options:{required:true}}},   
+	        {field:'mark',title:'角色描述',width:100,align:'center',editor:{type:"text"}},   
+	        {field:'status',title:'角色状态',width:100,align:'center',editor:{type:"combobox",options:{
+	        	required:true,valueField:'sid',textField:'statusStr',data:statusObj}},
+	        	formatter:function(value,row,index){
+	        		for(var i=0;i<statusObj.length;i++){
+	        			if(statusObj[i].sid==value){
+	        				return statusObj[i].statusStr;
+	        			}
+	        		}
+	        		return value;
+	        	}
+	        }  
+	    ]],
+	    toolbar: [{
+			iconCls: 'icon-add',
+			text:"添加",
+			handler: function(){ //当用户选择编辑时
+				op="addRoles";
+				flag="添加";
+				//判断当前有没有行正在被编辑
+				if(editRow!=undefined){ //说明当前有正在被编辑的行
+					datagrid.datagrid("rejectChanges");//回滚自创建以来或自上次调用AcceptChanges，所有的变化数据。
+					datagrid.datagrid('endEdit',editRow); //结束正在被编辑的行
+					editRow=undefined;
+				}else{
+					datagrid.datagrid('insertRow',{index:0,row:{}}); //在最前面添加一行
+					datagrid.datagrid('beginEdit',0); //开始编辑第一行
+					editRow=0; //记录当前正在被编辑的行
+				}
+			}
+		},'-',{
+			iconCls: 'icon-edit',
+			text:"修改",
+			handler: function(){ //当用户选择修改时
+				op="updateRoles";
+				flag="修改";
+				var row=datagrid.datagrid("getChecked")[0];
+				if(row==undefined){//说明用户没有选择要修改的数据
+					$.messager.show({title:'温馨提示',msg:'请选择您要修改的数据行...',timeout:2000,showType:'slide'});
+				}else{
+					//判断有没有正在被编辑的行，如果有则先关闭正在被编辑的行
+					if(editRow!=undefined){
+						datagrid.datagrid("rejectChanges");
+						datagrid.datagrid('endEdit',editRow); //结束正在被编辑的行
+						editRow=undefined;
+					}
+					//开启要修改的那一行的编辑
+					var index=datagrid.datagrid("getRowIndex",row);//先获取要修改的行的索引
+					datagrid.datagrid("updateRow",{index:index,row:row});//开启更新
+					datagrid.datagrid("beginEdit",index);
+					editRow=index; //记录当前正在被编辑的行
+				}
+			}
+		},'-',{
+			iconCls: 'icon-remove',
+			text:"删除",
+			handler: function(){ //当用户选择删除时
+				//获取所有被选中的行
+				var rows=datagrid.datagrid("getChecked");
+				if(rows.length<=0){
+					$.messager.show({title:'温馨提示',msg:'请选择您要删除的数据...',timeout:2000,showType:'slide'});
+				}else{
+					$.messager.confirm('删除确认', '您确定要删除选中的数据吗?',function(rt){
+						if(rt){ //如果确认删除，则获取所有要删除的数据的id
+							var rids="";
+							for(var i=0;i<rows.length-1;i++){
+								rids+=rows[i].rid+",";
+							}
+							rids+=rows[i].rid;
+							
+							//发送到后台，从数据库中删除此数据
+							$.post("../../rolesServlet",{op:"deleteRoles",rid:rids},function(data){
+								data=parseInt($.trim(data));
+								if(data>0){ //说明是成功的
+									$.messager.show({title:'成功提示',msg:'角色信息删除成功...',timeout:2000,showType:'slide'});
+									datagrid.datagrid("reload"); //重新加载数据
+								}else{
+									$.messager.alert('失败提示','角色信息删除失败...','error');
+								}
+							});
+						}
+					});
+				}
+			}
+		},'-',{
+			iconCls: 'icon-save',
+			text:"保存",
+			handler: function(){ //当用户选择保存时
+				datagrid.datagrid('endEdit',editRow); //结束编辑
+				var rows=datagrid.datagrid("getChanges")[0];//获取当前正在被编辑的行
+				if(rows==undefined){//说明用户没有修改任何信息
+					datagrid.datagrid("rejectChanges");
+					datagrid.datagrid("unselectAll"); //取消选择所有页面的行。
+					editRow=undefined;
+				}else{
+					//往rows对象中添加一个op属性
+					rows["op"]=op;
+					$.post("../../rolesServlet",rows,function(data){
+						data=parseInt($.trim(data));
+						if(data>0){ //说明是成功的
+							$.messager.show({title:'成功提示',msg:'角色信息'+flag+'成功...',timeout:2000,showType:'slide'});
+							rows=null;
+							datagrid.datagrid("reload"); //重新加载数据
+							datagrid.datagrid("rejectChanges");
+							datagrid.datagrid("unselectAll"); 
+						}else{
+							$.messager.alert('失败提示','角色信息'+flag+'失败...','error');
+						}
+					});
+				}
+			}
+		},'-',{
+			iconCls: 'icon-redo',
+			text:"撤销",
+			handler: function(){ //当用户选择撤销时
+				datagrid.datagrid("rejectChanges");
+				datagrid.datagrid('endEdit',editRow); //结束正在被编辑的行
+				editRow=undefined;
+			}
+		}]
+	});  
+</script>

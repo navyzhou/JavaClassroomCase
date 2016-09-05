@@ -1,0 +1,82 @@
+<style>
+	.add_shopping_info>ul>li{
+		list-style-type:none;
+		margin-top:20px;
+	}
+	
+	.add_shopping_info>ul>li>span{
+		display:inline-block;
+		width:120px;
+		text-align: right;
+		margin-right:10px;
+	}
+	
+	.add_shopping_info>ul>li>input,.add_shopping_info>ul>li>select{
+		width:200px;
+		border:1px solid #6198CD; 
+	}
+</style>
+
+<div class="add_shopping_info">
+	<ul>
+		<li>
+    		<span>商家编号:</span>
+    		<select name="manager_shopping_aid" id="manager_shopping_aid">
+    		
+    		</select>
+    		<span>店铺名称:</span>
+    		<input type="text" name="manager_shopping_sname" id="manager_shopping_sname" placeholder="请输入您的店铺名称..." 
+    			required="required"/>
+    	
+    		<span>店铺类型：</span>
+    		<select name="manager_shopping_tid" id="manager_shopping_tid">
+    		
+    		</select>
+    	</li>	
+    	<li>
+    		<span>省份：</span>
+    		<select name="manager_shopping_prov" id="manager_shopping_prov">
+    			<option value="-1">--请选择省份--</option>
+    		</select>
+    	
+    		<span>城市：</span>
+    		<select name="manager_shopping_city" id="manager_shopping_city">
+    			<option value="-1">--请选择城市--</option>
+    		</select>
+    	
+    		<span>地区：</span>
+    		<select name="manager_shopping_area" id="manager_shopping_area">
+    			<option value="-1">--请选择地区--</option>
+    		</select>
+    	</li>
+    	<li>
+    		<span>详细地址:</span>
+    		<input type="text" name="admmanager_shopping_addr" id="manager_shopping_addr" placeholder="请输入您的详细地址..." required="required"/>
+    	
+    		<span>联系方式:</span>
+    		<input type="text" name="admmanager_shopping_tel" id="admmanager_shopping_tel" placeholder="请输入您的联系方式..." required="required"/>
+    		
+    		<span>日期:</span>
+    		<input type="text" name="admmanager_shopping_date" id="admmanager_shopping_date" class="easyui-datebox" required="required"/>
+    	</li>
+    	<li>
+    		<span>店铺信息:</span>
+    		<a href="javascript:add_shoppingInfo()" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加</a>
+    		<div style="margin-left:70px;margin-top:10px">
+    			<script id="editor" type="text/plain" style="width:940px;height:300px;"></script>
+    		</div>
+    	</li>
+    </ul>
+</div>
+
+<script>
+	//建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+	var ue = UE.getEditor('editor');
+	function add_shoppingInfo(){
+		UE.getEditor('editor').execCommand('insertHtml','<p>发达地方的<br/>发安防</p><p>安抚<span style="font-size: 14px;"></span><br/></p>');
+		//UE.getEditor('editor').setContent('<p>发达地方的<br/>发安防</p><p>安抚<span style="font-size: 14px;"></span><br/></p>');
+		console.info(ue.getContent());
+		$("#admmanager_shopping_date").datebox("setValue",'2016-08-16');
+		console.info( $("#admmanager_shopping_date").datebox("getValue") );
+	}
+</script>
